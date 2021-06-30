@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class SongWriter {
+class SongCreator {
 
+    private final ArrayList<String> caughtAnimals = new ArrayList<>();
+    private final ArrayList<String> rhymes = new ArrayList<>();
     private String firstAnimal;
-    private ArrayList<String> caughtAnimals = new ArrayList<>();
-    private ArrayList<String> rhymes = new ArrayList<>();
 
-    public SongWriter() {
+    public SongCreator() {
         rhymes.add("That wriggled and wiggled and tickled inside her.");
         rhymes.add("How absurd to swallow a ");
         rhymes.add("Fancy that to swallow a ");
@@ -16,9 +16,8 @@ class SongWriter {
     }
 
     public String writeSong(List<String> animals) {
-        StringBuilder song = new StringBuilder();
         firstAnimal = animals.get(0);
-        String rhyme = "That wriggled and wiggled and tickled inside her.";
+        StringBuilder song = new StringBuilder();
         int rhymeIndex = 0;
 
         for (int i = 0; i < animals.size(); i++) {
@@ -27,14 +26,15 @@ class SongWriter {
             } else if (i == animals.size() - 1) {
                 song.append(finalParagraph(animals.get(i)));
             } else {
-                song.append(writeRegularParagraph(animals.get(i), animals.get(i - 1), writeRhyme(rhymes, rhymeIndex, animals.get(i))));
+                String rhyme = writeRhyme(rhymeIndex, animals.get(i));
+                song.append(writeRegularParagraph(animals.get(i), animals.get(i - 1), rhyme));
                 rhymeIndex++;
             }
         }
         return song.toString();
     }
 
-    private String writeRhyme(ArrayList<String> rhymes, int rhymeIndex, String animal) {
+    private String writeRhyme(int rhymeIndex, String animal) {
         if (rhymeIndex == 0) {
             return rhymes.get(0);
         }
@@ -42,7 +42,7 @@ class SongWriter {
     }
 
     private String writeRegularParagraph(String animal, String previousAnimal, String rhyme) {
-        caughtAnimals.add(oneToCatchTwo(animal, previousAnimal));
+        caughtAnimals.add(sheSwallowedTwoToCatchOne(animal, previousAnimal));
         StringBuilder allTheCaughtAnimals = new StringBuilder();
 
         for (int i = caughtAnimals.size() - 1; i > -1; i--) {
@@ -71,8 +71,8 @@ class SongWriter {
                 ...She's dead, of course!""", animal);
     }
 
-    private String oneToCatchTwo(String current, String previous) {
-        return String.format("She swallowed the %s to catch the %s;", current, previous);
+    private String sheSwallowedTwoToCatchOne(String current, String previous) {
+        return String.format("She swallowed the %s to catch the %s,", current, previous);
     }
 
     private String firstLine(String animal) {
